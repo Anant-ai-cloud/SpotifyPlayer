@@ -18,8 +18,10 @@ function secondsToMinutesSeconds(seconds) {
 async function getSongs(folder) {
      folder = folder.replace(/\\/g, "/");
     currFolder = folder;
-    let a = await fetch(`http://127.0.0.1:3000/${folder}/`)  // using my port number in online where my  respository are present we are fetching from online
-       console.log(`http://127.0.0.1:3000/${folder}/`) 
+    // let a = await fetch(`http://127.0.0.1:3000/${folder}/`)  // using my port number in online where my  respository are present we are fetching from online
+    let a = await fetch(`/songs/ncs/`);
+ 
+    console.log(`http://127.0.0.1:3000/${folder}/`) 
     let response = await a.text(); //here my DOM convert in the form of text where my songs are located, we are converting it to take out songs
     let div = document.createElement("div");
     div.innerHTML = response  //store whole dom(html document) where my all songs are presents in table form
