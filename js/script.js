@@ -18,9 +18,9 @@ function secondsToMinutesSeconds(seconds) {
 async function getSongs(folder) {
      folder = folder.replace(/\\/g, "/");
     currFolder = folder;
-    let a = await fetch(`http://127.0.0.1:3000/${folder}/`)  // using my port number in online where my  respository are present we are fetching from online
-    
-    console.log(`http://127.0.0.1:3000/${folder}/`) 
+     // using my port number in online where my  respository are present we are fetching from online
+     let a = await fetch(`/${folder}/`) 
+   
     let response = await a.text(); //here my DOM convert in the form of text where my songs are located, we are converting it to take out songs
     let div = document.createElement("div");
     div.innerHTML = response  //store whole dom(html document) where my all songs are presents in table form
@@ -97,7 +97,7 @@ async function displayAlbums() {
     console.log("displaying albums");
 
     // Fetch the main songs directory
-    let a = await fetch(`http://127.0.0.1:3000/songs/`);
+    let a = await fetch(`/songs/`);
     let response = await a.text();
 
     let div = document.createElement("div");
@@ -123,7 +123,7 @@ async function displayAlbums() {
 
             // Fetch info.json of each folder
             try {
-                let infoResponse = await fetch(`http://127.0.0.1:3000/songs/${folder}/info.json`);
+                let infoResponse = await fetch(`/songs/${folder}/info.json`);
                 if (!infoResponse.ok) continue; // skip if info.json not found
 
                 let info = await infoResponse.json();
