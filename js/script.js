@@ -16,34 +16,39 @@ function secondsToMinutesSeconds(seconds) {
 
 
 async function getSongs(folder) {
-     folder = folder.replace(/\\/g, "/");
+    folder = folder.replace(/\\/g, "/");
     currFolder = folder;
     // let a = await fetch(`http://127.0.0.1:3000/${folder}/`)  // using my port number in online where my  respository are present we are fetching from online
-    let a = await fetch(`/songs/ncs/`);
- 
-    console.log(`http://127.0.0.1:3000/${folder}/`) 
+    // Detect base URL dynamically
+    const BASE_URL = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
+        ? "http://127.0.0.1:3000" // Local dev server
+        : ""; // Production (same origin, Vercel)
+        let a = await fetch(`${BASE_URL}/${folder}/`);
+
+
+    console.log(`http://127.0.0.1:3000/${folder}/`)
     let response = await a.text(); //here my DOM convert in the form of text where my songs are located, we are converting it to take out songs
     let div = document.createElement("div");
     div.innerHTML = response  //store whole dom(html document) where my all songs are presents in table form
     // document.body.append(div) we will not put it into our webpage
     let as = div.getElementsByTagName("a")  // as will now have all a element present in div's innerhtml
-    
+
     songs = []  // make songs array to store all songs
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
 
         if (element.href.endsWith(".mp3")) {
             console.log(element)
-            
+
             const decodedHref = decodeURIComponent(element.href);
-            
+
             const normalizedHref = decodedHref.replace(/\\/g, "/");
             console.log(normalizedHref)
             console.log(folder)
             const parts = normalizedHref.split(`/${folder}/`);
             // const parts = decodedHref.split(`/${folder}/`);
             console.log(parts)
-            
+
 
             songs.push(parts[1]);
         }
@@ -76,10 +81,10 @@ async function getSongs(folder) {
 const playMusic = (track, pause = false) => {
     // let audio = new Audio ("/songs/" + track)      // they will make new object again and again that causes multiple songs play at one time
     // audio.play()
-    console.log(`/${currFolder}/` + track )
-    
+    console.log(`/${currFolder}/` + track)
+
     currentSong.src = `/${currFolder}/` + track  // it will send request to songs folder to get track(means it will become something like 
-    
+
 
     console.log(currentSong.src)
     // this https://127.0.0.1/3000/songs/track) then it will give me that track's link from songs folder and put into currentSong.src means in Audio object's src to play
@@ -159,13 +164,13 @@ async function displayAlbums() {
 
 
 
-async function main() {    
-    await getSongs("songs/ncs")    
+async function main() {
+    await getSongs("songs/ncs")
     playMusic(songs[0], true)
 
-    
+
     displayAlbums()
-    
+
     play.addEventListener("click", () => {
         if (currentSong.paused) {
             currentSong.play();
@@ -184,7 +189,7 @@ async function main() {
     })
     //Add an event listener to seekbar
     document.querySelector(".seekbar").addEventListener("click", e => {
-        
+
         let percent = (e.offsetX / e.target.getBoundingClientRect().width) * 100;
         document.querySelector(".circle").style.left = percent + "%"; // it will move my circle in that much percent in x direction by increasing left
         currentSong.currentTime = (currentSong.duration * percent) / 100; // it will forward my song that much percent from total duration
@@ -202,7 +207,7 @@ async function main() {
     //Add event listener to previous
     previous.addEventListener("click", () => {
         console.log(songs.indexOf(currentSong.src.split("/").slice(-1)[0]))
-        let previousSong =  currentSong.src.split("/").slice(-1)[0].replaceAll("%20", " ")
+        let previousSong = currentSong.src.split("/").slice(-1)[0].replaceAll("%20", " ")
         let index = songs.indexOf(previousSong);
         if (index - 1 >= 0) {   //should execute till 0th index
             playMusic(songs[index - 1]);
@@ -214,7 +219,7 @@ async function main() {
         // let index = songs.indexOf(currentSong.src.split("/").slice(-1)[0]);
         let nextSong = currentSong.src.split("/").slice(-1)[0].replaceAll("%20", " ")
         let index = songs.indexOf(nextSong);
-        
+
         if (index + 1 < songs.length) {  //should execut till last index of songs array
             playMusic(songs[index + 1]);
         }
