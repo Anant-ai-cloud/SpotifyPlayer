@@ -20,10 +20,11 @@ async function getSongs(folder) {
     currFolder = folder;
      // using my port number in online where my  respository are present we are fetching from online
      let a = await fetch(`/${folder}/`) 
+     console.log(a)
    
-    let response = await a.text(); //here my DOM convert in the form of text where my songs are located, we are converting it to take out songs
+    let response = await a.text(); //here my response object's body convert in the form of text where my songs are located, we are converting it to take out songs
     let div = document.createElement("div");
-    div.innerHTML = response  //store whole dom(html document) where my all songs are presents in table form
+    div.innerHTML = response  //store text converted response object(html document) where my all songs are presents in table form
     // document.body.append(div) we will not put it into our webpage
     let as = div.getElementsByTagName("a")  // as will now have all a element present in div's innerhtml
     
